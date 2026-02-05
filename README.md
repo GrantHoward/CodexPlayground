@@ -4,15 +4,15 @@ A full-stack application featuring a Microsoft C# Web API with OpenAPI support a
 
 ## Architecture
 
-- **Backend**: ASP.NET Core 10.0 Web API with OpenAPI/Swagger support
+- **Backend**: ASP.NET Core 10.0 Web API with OpenAPI/Scalar support
 - **Frontend**: Angular 21 single-page application
-- **API Documentation**: Swagger UI for interactive API testing
+- **API Documentation**: Scalar UI for interactive API testing
 
 ## Features
 
 ### Backend (CodexApi)
 - RESTful API with minimal API endpoints
-- OpenAPI/Swagger documentation and UI
+- OpenAPI/Scalar documentation and UI
 - CORS configured for Angular app
 - Sample endpoints:
   - Weather forecast API
@@ -51,7 +51,7 @@ dotnet run --urls "http://localhost:5000"
 
 The API will start on `http://localhost:5000`
 
-**Access Swagger UI**: Navigate to `http://localhost:5000/swagger` in your browser to view and test the API endpoints.
+**Access Scalar API Documentation**: Navigate to `http://localhost:5000/scalar/v1` in your browser to view and test the API endpoints interactively.
 
 ### 3. Run the Frontend Application
 
@@ -122,7 +122,7 @@ The production build will be in `CodexApp/dist/CodexApp/`
 - **Backend**
   - ASP.NET Core 10.0
   - Microsoft.AspNetCore.OpenApi
-  - Swashbuckle.AspNetCore (Swagger)
+  - Scalar.AspNetCore (API Documentation UI)
   
 - **Frontend**
   - Angular 21
