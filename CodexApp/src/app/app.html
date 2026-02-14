@@ -4,17 +4,17 @@
     <p>C# Web API with OpenAPI + Angular 21</p>
   </header>
 
-  @if (error) {
+  @if (error()) {
     <div class="error">
-      {{ error }}
+      {{ error() }}
     </div>
   }
 
   <section class="weather-section">
     <h2>Weather Forecast</h2>
-    @if (weather.length > 0) {
+    @if (weather().length > 0) {
       <div class="weather-grid">
-        @for (w of weather; track w.date) {
+        @for (w of weather(); track w.date) {
           <div class="weather-card">
             <div class="date">{{ w.date }}</div>
             <div class="temp">{{ w.temperatureC }}°C / {{ w.temperatureF }}°F</div>
@@ -33,12 +33,14 @@
       <div class="form-group">
         <input 
           type="text" 
-          [(ngModel)]="newItem.name" 
+          [value]="newItemName()" 
+          (input)="newItemName.set($any($event.target).value)"
           placeholder="Item name"
           class="form-input">
         <input 
           type="text" 
-          [(ngModel)]="newItem.description" 
+          [value]="newItemDescription()" 
+          (input)="newItemDescription.set($any($event.target).value)"
           placeholder="Item description"
           class="form-input">
         <button (click)="addItem()" class="btn btn-primary">Add Item</button>
@@ -47,15 +49,15 @@
 
     <div class="items-list">
       <h3>Current Items</h3>
-      @if (loading) {
+      @if (loading()) {
         <div class="loading">Loading items...</div>
       }
-      @if (!loading && items.length === 0) {
+      @if (!loading() && items().length === 0) {
         <div class="no-items">
           No items yet. Add one above!
         </div>
       }
-      @for (item of items; track item.id) {
+      @for (item of items(); track item.id) {
         <div class="item-card">
           <div class="item-header">
             <h4>{{ item.name }}</h4>
