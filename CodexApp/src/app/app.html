@@ -4,19 +4,25 @@
     <p>C# Web API with OpenAPI + Angular 21</p>
   </header>
 
-  <div class="error" *ngIf="error">
-    {{ error }}
-  </div>
+  @if (error) {
+    <div class="error">
+      {{ error }}
+    </div>
+  }
 
   <section class="weather-section">
     <h2>Weather Forecast</h2>
-    <div class="weather-grid" *ngIf="weather.length > 0">
-      <div class="weather-card" *ngFor="let w of weather">
-        <div class="date">{{ w.date }}</div>
-        <div class="temp">{{ w.temperatureC }}°C / {{ w.temperatureF }}°F</div>
-        <div class="summary">{{ w.summary }}</div>
+    @if (weather.length > 0) {
+      <div class="weather-grid">
+        @for (w of weather; track w.date) {
+          <div class="weather-card">
+            <div class="date">{{ w.date }}</div>
+            <div class="temp">{{ w.temperatureC }}°C / {{ w.temperatureF }}°F</div>
+            <div class="summary">{{ w.summary }}</div>
+          </div>
+        }
       </div>
-    </div>
+    }
   </section>
 
   <section class="items-section">
@@ -41,17 +47,23 @@
 
     <div class="items-list">
       <h3>Current Items</h3>
-      <div *ngIf="loading" class="loading">Loading items...</div>
-      <div *ngIf="!loading && items.length === 0" class="no-items">
-        No items yet. Add one above!
-      </div>
-      <div class="item-card" *ngFor="let item of items">
-        <div class="item-header">
-          <h4>{{ item.name }}</h4>
-          <button (click)="deleteItem(item.id)" class="btn btn-danger">Delete</button>
+      @if (loading) {
+        <div class="loading">Loading items...</div>
+      }
+      @if (!loading && items.length === 0) {
+        <div class="no-items">
+          No items yet. Add one above!
         </div>
-        <p>{{ item.description }}</p>
-      </div>
+      }
+      @for (item of items; track item.id) {
+        <div class="item-card">
+          <div class="item-header">
+            <h4>{{ item.name }}</h4>
+            <button (click)="deleteItem(item.id)" class="btn btn-danger">Delete</button>
+          </div>
+          <p>{{ item.description }}</p>
+        </div>
+      }
     </div>
   </section>
 </div>
