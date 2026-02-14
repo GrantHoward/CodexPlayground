@@ -12,11 +12,12 @@ import { Api, Item, WeatherForecast } from './services/api';
 })
 export class App implements OnInit {
   protected readonly title = signal('Codex Playground');
-  items: Item[] = [];
-  weather: WeatherForecast[] = [];
-  newItem: Item = { id: 0, name: '', description: '' };
-  loading = false;
-  error = '';
+  protected readonly items = signal<Item[]>([]);
+  protected readonly weather = signal<WeatherForecast[]>([]);
+  protected readonly newItemName = signal('');
+  protected readonly newItemDescription = signal('');
+  protected readonly loading = signal(false);
+  protected readonly error = signal('');
 
   constructor(private api: Api) {}
 
@@ -26,16 +27,16 @@ export class App implements OnInit {
   }
 
   loadItems() {
-    this.loading = true;
-    this.error = '';
+    this.loading.set(true);
+    this.error.set('');
     this.api.getItems().subscribe({
       next: (data) => {
-        this.items = data;
-        this.loading = false;
+        this.items.set(data);
+        this.loading.set(false);
       },
       error: (err) => {
-        this.error = 'Failed to load items: ' + err.message;
-        this.loading = false;
+        this.error.set('Failed to load items: ' + err.message);
+        this.loading.set(false);
       }
     });
   }
@@ -43,7 +44,7 @@ export class App implements OnInit {
   loadWeather() {
     this.api.getWeatherForecast().subscribe({
       next: (data) => {
-        this.weather = data;
+        this.weather.set(data);
       },
       error: (err) => {
         console.error('Failed to load weather:', err);
@@ -52,21 +53,22 @@ export class App implements OnInit {
   }
 
   addItem() {
-    if (!this.newItem.name) return;
+    if (!this.newItemName()) return;
     
     const item: Item = {
-      id: this.items.length > 0 ? Math.max(...this.items.map(i => i.id)) + 1 : 1,
-      name: this.newItem.name,
-      description: this.newItem.description
+      id: this.items().length > 0 ? Math.max(...this.items().map(i => i.id)) + 1 : 1,
+      name: this.newItemName(),
+      description: this.newItemDescription()
     };
 
     this.api.createItem(item).subscribe({
       next: (data) => {
-        this.items.push(data);
-        this.newItem = { id: 0, name: '', description: '' };
+        this.items.update(items => [...items, data]);
+        this.newItemName.set('');
+        this.newItemDescription.set('');
       },
       error: (err) => {
-        this.error = 'Failed to create item: ' + err.message;
+        this.error.set('Failed to create item: ' + err.message);
       }
     });
   }
@@ -74,10 +76,10 @@ export class App implements OnInit {
   deleteItem(id: number) {
     this.api.deleteItem(id).subscribe({
       next: () => {
-        this.items = this.items.filter(i => i.id !== id);
+        this.items.update(items => items.filter(i => i.id !== id));
       },
       error: (err) => {
-        this.error = 'Failed to delete item: ' + err.message;
+        this.error.set('Failed to delete item: ' + err.message);
       }
     });
   }
